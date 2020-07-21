@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
-import { SharedService } from '../shared.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-bcomp',
@@ -11,17 +10,14 @@ export class BcompComponent implements OnInit {
   data: any;
 
   constructor(
-    private router: Router,
-    private sharedData: SharedService
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    this.sharedData.currentData.subscribe(data => this.data = data);
+    this.activatedRoute.url
+    .subscribe(url => console.log('This URL has changed to: ' + url));
   }
 
-  changeData(): void {
-    this.sharedData.changeData({name: 'Romario Varia'});
-    this.router.navigate(['/acomp']);
-  }
+
 
 }

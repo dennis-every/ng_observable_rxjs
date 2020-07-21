@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
+import { FormGroup, FormControl } from '@angular/forms';
 
 
 const httpOptions = {
@@ -15,40 +16,35 @@ const apiUrl = 'http://localhost:3000/products';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'angular-observable-rxjs';
-  data: any[] = [];
+  inputChangeLog: string[] = [];
+  inputForm: FormGroup;
 
   constructor(
     private http: HttpClient
   ) {
-    // this.getProducts()
-    // .subscribe((res: any) => {
-    //   this.data = res;
-    //   console.log(this.data);
-    // }, err => {
-    //   console.log(err);
-    // });
   }
 
+  ngOnInit(): void {
+    this.inputForm = new FormGroup({
+      name: new FormControl()
+    });
+    this.loginInputChange();
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      // TODO: send the error to remote logging infrastructure
-      console.log(error); // log to console instead
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
   }
 
-
-  getProducts(): Observable<any[]> {
-    return this.http.get<any[]>(apiUrl)
-    .pipe(
-      tap(product => console.log('fetched products')),
-      catchError(this.handleError('getProducts', []))
+  loginInputChange(): void {
+    const nameControl = this.inputForm.get('name');
+    nameControl.valueChanges.forEach(
+      (value: string) => {
+        this.inputChangeLog.push(value);
+        console.log(this.inputChangeLog);
+      }
     );
   }
+
+
 
 
 
